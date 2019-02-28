@@ -19,10 +19,11 @@ router.get('/functions/all', verifyToken, (req, res) => {
       }));
 });
 
-router.post('/functions', verifyToken, (req, res) => {
+router.post('/functions/room/:idRoom/version/:idVersion:', verifyToken, (req, res) => {
     jwt.verify(req.token, 'secretkey', (err => {
         if(!err){
-          mysqlConnection.query('', (err, result) => {
+          mysqlConnection.query("INSERT INTO Function (room, version) VALUES (" + req.params.idRoom + ", " 
+            + req.params.idVersion + ")", (err, result) => {
             if (err) {
               return res.status(500).send(err);
           } else {
@@ -50,24 +51,21 @@ router.get('/functions/:id', verifyToken, (req, res) => {
       });
     });
 
-router.post('/functions/room/:roomId/version/:versionId', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (err) => {
-        if(!err) {
-
-        } else {
-            res.sendStatus(403);
-        }
-    });
-});
 
 router.put('/functions/:id/room/:roomId/version/:versionId', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (err) => {
-        if(!err) {
-
-        } else {
-            res.sendStatus(403);
-        }
-    });
+  jwt.verify(req.token, 'secretkey', (err => {
+    if(!err){
+      mysqlConnection.query("UDAPTE Function SET room = "  +  req.params.roomId + ",  version = " + req.params.versionId +  
+        " WHERE id = " + req.params.idVersion , (err, result) => {
+        if (err) {
+          return res.status(500).send(err);
+      } else {
+          return res.status(200).send("Added Function");
+        }});
+    } else {
+      res.sendStatus(403);
+    }
+  }));
 });
 
 router.delete('/functions/:id', verifyToken, (req, res) => {
