@@ -5,41 +5,53 @@ const jwt = require('jsonwebtoken');
 const mysqlConnection  = require('../configurations/mysql');
 
 router.get('/functions/all', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
-        if(!err) {
-            mysqlConnection.query('', (err, rows) => {
-                if(!err) {
-                    res.json(rows);
-                } else {
-                    console.log(err);
-                }});
+    jwt.verify(req.token, 'secretkey', (err => {
+        if(!err){
+          mysqlConnection.query('', (err, rows, fields) => {
+            if(!err) {
+              res.json(rows);
             } else {
-                res.sendStatus(403);
-            }})
+              console.log(err);
+            }});  
+        } else {
+          res.sendStatus(403);
+        }
+      }));
 });
 
 router.post('/functions', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
-        if(!err) {
-
+    jwt.verify(req.token, 'secretkey', (err => {
+        if(!err){
+          mysqlConnection.query('', (err, result) => {
+            if (err) {
+              return res.status(500).send(err);
+          } else {
+              return res.status(200).send("Added Function");
+            }});
         } else {
-            res.sendStatus(403);
+          res.sendStatus(403);
         }
-    });
+      }));
 });
 
 router.get('/functions/:id', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
-
+          mysqlConnection.query('' + req.params.id, 
+          (err, row) => {
+            if(!err) {
+              res.json(row);
+            } else { 
+              console.log(err);
+            }});
         } else {
-            res.sendStatus(403);
+          res.sendStatus(403);
         }
+      });
     });
-});
 
 router.post('/functions/room/:roomId/version/:versionId', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
 
         } else {
@@ -49,7 +61,7 @@ router.post('/functions/room/:roomId/version/:versionId', verifyToken, (req, res
 });
 
 router.put('/functions/:id/room/:roomId/version/:versionId', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
 
         } else {
@@ -59,13 +71,18 @@ router.put('/functions/:id/room/:roomId/version/:versionId', verifyToken, (req, 
 });
 
 router.delete('/functions/:id', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
-
+          mysqlConnection.query('DELETE FROM Function WHERE id = '  + req.params.id, 
+            (err, result) => {
+              if (!err) {
+                return res.status(200).send("Deleted Function, id :" + req.params.id);
+              } else {
+                return res.status(500).send(err);
+              }});
         } else {
-            res.sendStatus(403);
-        }
-    });
+          res.sendStatus(403);
+        }})
 });
 
 function verifyToken(req, res, next) {

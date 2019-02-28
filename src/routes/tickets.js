@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const mysqlConnection  = require('../configurations/mysql');
 
 router.get('/tickets/all', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
             mysqlConnection.query('', (err, rows) => {
                 if(!err) {
@@ -13,13 +13,13 @@ router.get('/tickets/all', verifyToken, (req, res) => {
                 } else {
                     console.log(err);
                 }});
-            } else {
-                res.sendStatus(403);
-            }})
+        } else {
+           res.sendStatus(403);
+        }});
 });
 
 router.post('/tickets', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
 
         } else {
@@ -29,7 +29,7 @@ router.post('/tickets', verifyToken, (req, res) => {
 });
 
 router.get('/tickets/:id', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
 
         } else {
@@ -39,7 +39,7 @@ router.get('/tickets/:id', verifyToken, (req, res) => {
 });
 
 router.post('/tickets/function/:functionId/seat/:seatId', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
 
         } else {
@@ -49,7 +49,7 @@ router.post('/tickets/function/:functionId/seat/:seatId', verifyToken, (req, res
 });
 
 router.put('/tickets/:ticketId/function/:functionId/seat/:seatId', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
 
         } else {
@@ -59,7 +59,7 @@ router.put('/tickets/:ticketId/function/:functionId/seat/:seatId', verifyToken, 
 });
 
 router.delete('/tickets/:id', verifyToken, (req, res) => {
-    jwt.verify(req.token, 'secretkey', (req, rest) => {
+    jwt.verify(req.token, 'secretkey', (err) => {
         if(!err) {
 
         } else {
